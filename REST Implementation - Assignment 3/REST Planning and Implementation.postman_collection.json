@@ -1,0 +1,1586 @@
+{
+	"info": {
+		"name": "REST Planning and Implementation",
+		"_postman_id": "382735dc-b279-d1d9-7abf-6a49d03f07b3",
+		"description": "",
+		"schema": "https://schema.getpostman.com/json/collection/v2.1.0/collection.json"
+	},
+	"item": [
+		{
+			"name": "Get list of all boats - set env. variable",
+			"event": [
+				{
+					"listen": "test",
+					"script": {
+						"id": "24ff95e4-676d-40b6-8640-21808421a65f",
+						"type": "text/javascript",
+						"exec": [
+							"var data = JSON.parse(responseBody);",
+							"var number_of_boats = Object.keys(data).length;",
+							"",
+							"postman.setEnvironmentVariable(\"total_boats\",number_of_boats);"
+						]
+					}
+				}
+			],
+			"request": {
+				"method": "GET",
+				"header": [],
+				"body": {},
+				"url": {
+					"raw": "http://localhost:8080/boats",
+					"protocol": "http",
+					"host": [
+						"localhost"
+					],
+					"port": "8080",
+					"path": [
+						"boats"
+					]
+				},
+				"description": null
+			},
+			"response": []
+		},
+		{
+			"name": "Create a new boat",
+			"event": [
+				{
+					"listen": "test",
+					"script": {
+						"id": "14a76d15-5065-4529-8247-3f2e0011d374",
+						"type": "text/javascript",
+						"exec": [
+							"tests[\"A new boat was successfully created\"] = responseBody.has(\"id\") && responseBody.has(\"name\") && responseBody.has(\"length\") && responseBody.has(\"type\")  && responseBody.has(\"at_sea\") && responseBody.has(\"self\") && responseCode.code === 200;"
+						]
+					}
+				}
+			],
+			"request": {
+				"method": "POST",
+				"header": [
+					{
+						"key": "Content-Type",
+						"value": "application/json",
+						"disabled": true
+					}
+				],
+				"body": {
+					"mode": "raw",
+					"raw": "{\n\t\"name\":\"My new boat\",\n\t\"type\":\"rowboat\",\n\t\"length\":12\n}"
+				},
+				"url": {
+					"raw": "http://localhost:8080/boats",
+					"protocol": "http",
+					"host": [
+						"localhost"
+					],
+					"port": "8080",
+					"path": [
+						"boats"
+					]
+				},
+				"description": ""
+			},
+			"response": []
+		},
+		{
+			"name": "Confirm that number of boats in boat list has increased",
+			"event": [
+				{
+					"listen": "test",
+					"script": {
+						"id": "1ec8d404-a251-4474-b180-a2779f20b890",
+						"type": "text/javascript",
+						"exec": [
+							"var data = JSON.parse(responseBody);",
+							"var new_number_of_boats = Object.keys(data).length;",
+							"var old_number_of_boats = postman.getEnvironmentVariable(\"total_boats\");",
+							"",
+							"tests[\"List of boats has increased by 1\"] = new_number_of_boats > old_number_of_boats;",
+							"",
+							"postman.setEnvironmentVariable(\"total_boats\",new_number_of_boats);"
+						]
+					}
+				}
+			],
+			"request": {
+				"method": "GET",
+				"header": [],
+				"body": {},
+				"url": {
+					"raw": "http://localhost:8080/boats",
+					"protocol": "http",
+					"host": [
+						"localhost"
+					],
+					"port": "8080",
+					"path": [
+						"boats"
+					]
+				},
+				"description": ""
+			},
+			"response": []
+		},
+		{
+			"name": "Create new boat - Error Check",
+			"event": [
+				{
+					"listen": "test",
+					"script": {
+						"id": "9c70737a-36d8-4019-a259-33850894af7e",
+						"type": "text/javascript",
+						"exec": [
+							"tests[\"Error caught successfully - bad format in POST body\"] = responseCode.code === 400;"
+						]
+					}
+				}
+			],
+			"request": {
+				"method": "POST",
+				"header": [
+					{
+						"key": "Content-Type",
+						"value": "application/json"
+					}
+				],
+				"body": {
+					"mode": "raw",
+					"raw": "{\n\t\"BAD_name\":\"Yee Old Boat\",\n\t\"BAD_type\":\"rowboat\",\n\t\"BAD_length\":12\n}"
+				},
+				"url": {
+					"raw": "http://localhost:8080/boats",
+					"protocol": "http",
+					"host": [
+						"localhost"
+					],
+					"port": "8080",
+					"path": [
+						"boats"
+					]
+				},
+				"description": ""
+			},
+			"response": []
+		},
+		{
+			"name": "Get list of all boats",
+			"event": [
+				{
+					"listen": "test",
+					"script": {
+						"id": "4c7a4f68-1632-46f5-9045-a67e3c7b0413",
+						"type": "text/javascript",
+						"exec": [
+							"var object = JSON.parse(responseBody);",
+							"postman.setEnvironmentVariable(\"boat_ID\", object[object.length - 1].id);",
+							"",
+							"tests[\"List of all boats was successfully returned\"] = responseCode.code === 200;",
+							""
+						]
+					}
+				}
+			],
+			"request": {
+				"method": "GET",
+				"header": [],
+				"body": {},
+				"url": {
+					"raw": "http://localhost:8080/boats",
+					"protocol": "http",
+					"host": [
+						"localhost"
+					],
+					"port": "8080",
+					"path": [
+						"boats"
+					]
+				},
+				"description": ""
+			},
+			"response": []
+		},
+		{
+			"name": "Get specific boat",
+			"event": [
+				{
+					"listen": "test",
+					"script": {
+						"id": "d0df23b8-2971-493b-ad56-95227809c9c6",
+						"type": "text/javascript",
+						"exec": [
+							"tests[\"Individual boat successfully returned\"] = responseBody.has(\"id\") && responseBody.has(\"name\") && responseBody.has(\"length\") && responseBody.has(\"type\")  && responseBody.has(\"at_sea\") && responseBody.has(\"self\") && responseCode.code === 200;"
+						]
+					}
+				}
+			],
+			"request": {
+				"method": "GET",
+				"header": [],
+				"body": {},
+				"url": {
+					"raw": "http://localhost:8080/boats/{{boat_ID}}",
+					"protocol": "http",
+					"host": [
+						"localhost"
+					],
+					"port": "8080",
+					"path": [
+						"boats",
+						"{{boat_ID}}"
+					]
+				},
+				"description": ""
+			},
+			"response": []
+		},
+		{
+			"name": "Get specific boat - Error check",
+			"event": [
+				{
+					"listen": "test",
+					"script": {
+						"id": "93ad5fc8-4d55-40d1-ab52-5b6697961f02",
+						"type": "text/javascript",
+						"exec": [
+							"tests[\"Error caught successfully - bad boat id in GET URL\"] = responseCode.code === 400;"
+						]
+					}
+				}
+			],
+			"request": {
+				"method": "GET",
+				"header": [],
+				"body": {},
+				"url": {
+					"raw": "http://localhost:8080/boats/badBoatID",
+					"protocol": "http",
+					"host": [
+						"localhost"
+					],
+					"port": "8080",
+					"path": [
+						"boats",
+						"badBoatID"
+					]
+				},
+				"description": ""
+			},
+			"response": []
+		},
+		{
+			"name": "Modify a specific boat",
+			"event": [
+				{
+					"listen": "test",
+					"script": {
+						"id": "d75c7d01-f663-46fa-8ee3-71e30e6299cd",
+						"type": "text/javascript",
+						"exec": [
+							"tests[\"Boat was successfully modified\"] = responseCode.code === 200;"
+						]
+					}
+				}
+			],
+			"request": {
+				"method": "PATCH",
+				"header": [
+					{
+						"key": "Content-Type",
+						"value": "application/json"
+					}
+				],
+				"body": {
+					"mode": "raw",
+					"raw": "{\"name\":\"New Name\"}"
+				},
+				"url": {
+					"raw": "http://localhost:8080/boats/{{boat_ID}}",
+					"protocol": "http",
+					"host": [
+						"localhost"
+					],
+					"port": "8080",
+					"path": [
+						"boats",
+						"{{boat_ID}}"
+					]
+				},
+				"description": ""
+			},
+			"response": []
+		},
+		{
+			"name": "Modify a specific boat - error check body format",
+			"event": [
+				{
+					"listen": "test",
+					"script": {
+						"id": "dcd67701-4981-406f-bc67-1fb51c1d6d39",
+						"type": "text/javascript",
+						"exec": [
+							"tests[\"Error caught successfully - bad format of data in PATCH body\"] = responseCode.code === 400;"
+						]
+					}
+				}
+			],
+			"request": {
+				"method": "PATCH",
+				"header": [
+					{
+						"key": "Content-Type",
+						"value": "application/json"
+					}
+				],
+				"body": {
+					"mode": "raw",
+					"raw": "{\"BADnameWONTwork\":\"New Boat Name\"}"
+				},
+				"url": {
+					"raw": "http://localhost:8080/boats/{{boat_ID}}",
+					"protocol": "http",
+					"host": [
+						"localhost"
+					],
+					"port": "8080",
+					"path": [
+						"boats",
+						"{{boat_ID}}"
+					]
+				},
+				"description": ""
+			},
+			"response": []
+		},
+		{
+			"name": "Modify a specific boat - error check boat doesnt exist",
+			"event": [
+				{
+					"listen": "test",
+					"script": {
+						"id": "f5c79dcc-1ac6-4863-b1c4-498996f9e09a",
+						"type": "text/javascript",
+						"exec": [
+							"tests[\"Error caught successfully - bad boat id in URL\"] = responseCode.code === 400;"
+						]
+					}
+				}
+			],
+			"request": {
+				"method": "PATCH",
+				"header": [
+					{
+						"key": "Content-Type",
+						"value": "application/json"
+					}
+				],
+				"body": {
+					"mode": "raw",
+					"raw": "{\"name\":\"New Boat Name\"}"
+				},
+				"url": {
+					"raw": "http://localhost:8080/boats/badBoatID",
+					"protocol": "http",
+					"host": [
+						"localhost"
+					],
+					"port": "8080",
+					"path": [
+						"boats",
+						"badBoatID"
+					]
+				},
+				"description": ""
+			},
+			"response": []
+		},
+		{
+			"name": "Modify specific boat - total update",
+			"event": [
+				{
+					"listen": "test",
+					"script": {
+						"id": "1ed80bcf-00d8-41a3-a4b3-db70f630ac69",
+						"type": "text/javascript",
+						"exec": [
+							"tests[\"Boat name, type and length successfully updated\"] = responseCode.code === 200;"
+						]
+					}
+				}
+			],
+			"request": {
+				"method": "PUT",
+				"header": [
+					{
+						"key": "Content-Type",
+						"value": "application/json"
+					}
+				],
+				"body": {
+					"mode": "raw",
+					"raw": "{\"name\":\"New Patch Name\", \"type\":\"New Patch Type\", \"length\":888}"
+				},
+				"url": {
+					"raw": "http://localhost:8080/boats/{{boat_ID}}",
+					"protocol": "http",
+					"host": [
+						"localhost"
+					],
+					"port": "8080",
+					"path": [
+						"boats",
+						"{{boat_ID}}"
+					]
+				},
+				"description": ""
+			},
+			"response": []
+		},
+		{
+			"name": "Modify specific boat - error check bad body",
+			"event": [
+				{
+					"listen": "test",
+					"script": {
+						"id": "abf1369c-370a-401d-a1af-445ac2711eff",
+						"type": "text/javascript",
+						"exec": [
+							"tests[\"Error caught successfully - bad format of data in PUT body\"] = responseCode.code === 400;"
+						]
+					}
+				}
+			],
+			"request": {
+				"method": "PUT",
+				"header": [
+					{
+						"key": "Content-Type",
+						"value": "application/json"
+					}
+				],
+				"body": {
+					"mode": "raw",
+					"raw": "{\"BADname\":\"New Patch Name\", \"BADtype\":\"New Patch Type\", \"BADlength\":888}"
+				},
+				"url": {
+					"raw": "http://localhost:8080/boats/{{boat_ID}}",
+					"protocol": "http",
+					"host": [
+						"localhost"
+					],
+					"port": "8080",
+					"path": [
+						"boats",
+						"{{boat_ID}}"
+					]
+				},
+				"description": ""
+			},
+			"response": []
+		},
+		{
+			"name": "Modify specific boat - error check bad boat id",
+			"event": [
+				{
+					"listen": "test",
+					"script": {
+						"id": "10922c7a-f04d-4aa8-9f2a-c87e36742e94",
+						"type": "text/javascript",
+						"exec": [
+							"tests[\"Error caught successfully - bad boat id in URL\"] = responseCode.code === 400;"
+						]
+					}
+				}
+			],
+			"request": {
+				"method": "PUT",
+				"header": [
+					{
+						"key": "Content-Type",
+						"value": "application/json"
+					}
+				],
+				"body": {
+					"mode": "raw",
+					"raw": "{\"name\":\"New Patch Name\", \"type\":\"New Patch Type\", \"length\":888}"
+				},
+				"url": {
+					"raw": "http://localhost:8080/boats/badBoatID",
+					"protocol": "http",
+					"host": [
+						"localhost"
+					],
+					"port": "8080",
+					"path": [
+						"boats",
+						"badBoatID"
+					]
+				},
+				"description": ""
+			},
+			"response": []
+		},
+		{
+			"name": "Get list of all slips - set env. variable",
+			"event": [
+				{
+					"listen": "test",
+					"script": {
+						"id": "34bfffca-7a6a-405b-bfcd-2c954ef2e9b6",
+						"type": "text/javascript",
+						"exec": [
+							"var data = JSON.parse(responseBody);",
+							"var number_of_slips = Object.keys(data).length;",
+							"",
+							"postman.setEnvironmentVariable(\"total_slips\",number_of_slips);"
+						]
+					}
+				}
+			],
+			"request": {
+				"method": "GET",
+				"header": [],
+				"body": {},
+				"url": {
+					"raw": "http://localhost:8080/slips",
+					"protocol": "http",
+					"host": [
+						"localhost"
+					],
+					"port": "8080",
+					"path": [
+						"slips"
+					]
+				},
+				"description": ""
+			},
+			"response": []
+		},
+		{
+			"name": "Create a new slip",
+			"event": [
+				{
+					"listen": "test",
+					"script": {
+						"id": "55300e4c-322b-4d4c-9708-8f77e6cf5cbf",
+						"type": "text/javascript",
+						"exec": [
+							"tests[\"New slip was successfully created\"] = responseBody.has(\"id\") && responseBody.has(\"number\") && responseBody.has(\"current_boat\") && responseBody.has(\"arrival_date\") && responseBody.has(\"self\") && responseCode.code === 200;"
+						]
+					}
+				}
+			],
+			"request": {
+				"method": "POST",
+				"header": [
+					{
+						"key": "Content-Type",
+						"value": "application/javascript"
+					}
+				],
+				"body": {
+					"mode": "raw",
+					"raw": "{\"number\":909090}"
+				},
+				"url": {
+					"raw": "http://localhost:8080/slips",
+					"protocol": "http",
+					"host": [
+						"localhost"
+					],
+					"port": "8080",
+					"path": [
+						"slips"
+					]
+				},
+				"description": ""
+			},
+			"response": []
+		},
+		{
+			"name": "Confirm number of slips increased",
+			"event": [
+				{
+					"listen": "test",
+					"script": {
+						"id": "91bd8e25-d36f-49ed-98bb-0f2c7e36a24d",
+						"type": "text/javascript",
+						"exec": [
+							"var data = JSON.parse(responseBody);",
+							"var new_number_of_slips = Object.keys(data).length;",
+							"var old_number_of_slips = postman.getEnvironmentVariable(\"total_slips\");",
+							"",
+							"tests[\"List of slips has increased by 1\"] = new_number_of_slips > old_number_of_slips;",
+							"",
+							"postman.setEnvironmentVariable(\"total_slips\",new_number_of_slips);"
+						]
+					}
+				}
+			],
+			"request": {
+				"method": "GET",
+				"header": [],
+				"body": {},
+				"url": {
+					"raw": "http://localhost:8080/slips",
+					"protocol": "http",
+					"host": [
+						"localhost"
+					],
+					"port": "8080",
+					"path": [
+						"slips"
+					]
+				},
+				"description": ""
+			},
+			"response": []
+		},
+		{
+			"name": "Create new slip - Error check",
+			"event": [
+				{
+					"listen": "test",
+					"script": {
+						"id": "b48ff0a1-fd07-4184-acdc-74c94afb4e2b",
+						"type": "text/javascript",
+						"exec": [
+							"tests[\"Error caught successfully - bad format in POST body\"] = responseCode.code === 400;"
+						]
+					}
+				}
+			],
+			"request": {
+				"method": "POST",
+				"header": [
+					{
+						"key": "Content-Type",
+						"value": "application/json"
+					}
+				],
+				"body": {
+					"mode": "raw",
+					"raw": "{\"BADnumber\":8888}"
+				},
+				"url": {
+					"raw": "http://localhost:8080/slips",
+					"protocol": "http",
+					"host": [
+						"localhost"
+					],
+					"port": "8080",
+					"path": [
+						"slips"
+					]
+				},
+				"description": ""
+			},
+			"response": []
+		},
+		{
+			"name": "Get list of all slips",
+			"event": [
+				{
+					"listen": "test",
+					"script": {
+						"id": "1468f500-fae9-4157-b94a-775144c3b629",
+						"type": "text/javascript",
+						"exec": [
+							"var object = JSON.parse(responseBody);",
+							"postman.setEnvironmentVariable(\"slip_ID\", object[object.length - 1].id);",
+							"",
+							"tests[\"List of all slips was successfully returned\"] = responseCode.code === 200;"
+						]
+					}
+				}
+			],
+			"request": {
+				"method": "GET",
+				"header": [],
+				"body": {},
+				"url": {
+					"raw": "http://localhost:8080/slips",
+					"protocol": "http",
+					"host": [
+						"localhost"
+					],
+					"port": "8080",
+					"path": [
+						"slips"
+					]
+				},
+				"description": ""
+			},
+			"response": []
+		},
+		{
+			"name": "Get specific slip",
+			"event": [
+				{
+					"listen": "test",
+					"script": {
+						"id": "9962d9f8-7f5d-4c8c-b7b8-886d037c242e",
+						"type": "text/javascript",
+						"exec": [
+							"tests[\"Slip was successfully returned\"] = responseBody.has(\"id\") && responseBody.has(\"number\") && responseBody.has(\"current_boat\") && responseBody.has(\"arrival_date\") && responseBody.has(\"self\") && responseCode.code === 200;"
+						]
+					}
+				}
+			],
+			"request": {
+				"method": "GET",
+				"header": [],
+				"body": {},
+				"url": {
+					"raw": "http://localhost:8080/slips/{{slip_ID}}",
+					"protocol": "http",
+					"host": [
+						"localhost"
+					],
+					"port": "8080",
+					"path": [
+						"slips",
+						"{{slip_ID}}"
+					]
+				},
+				"description": ""
+			},
+			"response": []
+		},
+		{
+			"name": "Get specific slip - error check bad id",
+			"event": [
+				{
+					"listen": "test",
+					"script": {
+						"id": "f528ee42-006a-48df-879d-255830aa728f",
+						"type": "text/javascript",
+						"exec": [
+							"tests[\"Error caught successfully - bad slip id in GET URL\"] = responseCode.code === 400;"
+						]
+					}
+				}
+			],
+			"request": {
+				"method": "GET",
+				"header": [],
+				"body": {},
+				"url": {
+					"raw": "http://localhost:8080/slips/badSlipID",
+					"protocol": "http",
+					"host": [
+						"localhost"
+					],
+					"port": "8080",
+					"path": [
+						"slips",
+						"badSlipID"
+					]
+				},
+				"description": ""
+			},
+			"response": []
+		},
+		{
+			"name": "Modify a specific slip",
+			"event": [
+				{
+					"listen": "test",
+					"script": {
+						"id": "061507ae-07c1-4819-8ac3-3e860a756196",
+						"type": "text/javascript",
+						"exec": [
+							"tests[\"Slip number was successfully modified\"] = responseCode.code === 200;"
+						]
+					}
+				}
+			],
+			"request": {
+				"method": "PATCH",
+				"header": [
+					{
+						"key": "Content-Type",
+						"value": "application/json"
+					}
+				],
+				"body": {
+					"mode": "raw",
+					"raw": "{\"number\":202020}"
+				},
+				"url": {
+					"raw": "http://localhost:8080/slips/{{slip_ID}}",
+					"protocol": "http",
+					"host": [
+						"localhost"
+					],
+					"port": "8080",
+					"path": [
+						"slips",
+						"{{slip_ID}}"
+					]
+				},
+				"description": ""
+			},
+			"response": []
+		},
+		{
+			"name": "Modify a specific slip - error check bad body",
+			"event": [
+				{
+					"listen": "test",
+					"script": {
+						"id": "83325832-0e84-46f0-8001-cd09da31fd51",
+						"type": "text/javascript",
+						"exec": [
+							"tests[\"Error caught successfully - bad format of body\"] = responseCode.code === 400;"
+						]
+					}
+				}
+			],
+			"request": {
+				"method": "PATCH",
+				"header": [
+					{
+						"key": "Content-Type",
+						"value": "application/json"
+					}
+				],
+				"body": {
+					"mode": "raw",
+					"raw": "{\"BADnumber\":101010}"
+				},
+				"url": {
+					"raw": "http://localhost:8080/slips/{{slip_ID}}",
+					"protocol": "http",
+					"host": [
+						"localhost"
+					],
+					"port": "8080",
+					"path": [
+						"slips",
+						"{{slip_ID}}"
+					]
+				},
+				"description": ""
+			},
+			"response": []
+		},
+		{
+			"name": "Modify a specific slip - error check bad slip id",
+			"event": [
+				{
+					"listen": "test",
+					"script": {
+						"id": "c7d6b28c-ebf5-4cb2-85e1-e5424312d47b",
+						"type": "text/javascript",
+						"exec": [
+							"tests[\"Error caught successfully - bad slip id\"] = responseCode.code === 400;"
+						]
+					}
+				}
+			],
+			"request": {
+				"method": "PATCH",
+				"header": [
+					{
+						"key": "Content-Type",
+						"value": "application/json"
+					}
+				],
+				"body": {
+					"mode": "raw",
+					"raw": "{\"number\":101010}"
+				},
+				"url": {
+					"raw": "http://localhost:8080/slips/badSlipID",
+					"protocol": "http",
+					"host": [
+						"localhost"
+					],
+					"port": "8080",
+					"path": [
+						"slips",
+						"badSlipID"
+					]
+				},
+				"description": ""
+			},
+			"response": []
+		},
+		{
+			"name": "Modify a specific slip - error check slip number in use",
+			"event": [
+				{
+					"listen": "test",
+					"script": {
+						"id": "c7f0f1ec-5ff0-405e-a9b1-cdd341b2de77",
+						"type": "text/javascript",
+						"exec": [
+							"tests[\"Error caught successfully - cannot modify slip, slip number already in use\"] = responseCode.code === 403;"
+						]
+					}
+				}
+			],
+			"request": {
+				"method": "PATCH",
+				"header": [
+					{
+						"key": "Content-Type",
+						"value": "application/json"
+					}
+				],
+				"body": {
+					"mode": "raw",
+					"raw": "{\"number\":111}"
+				},
+				"url": {
+					"raw": "http://localhost:8080/slips/{{slip_ID}}",
+					"protocol": "http",
+					"host": [
+						"localhost"
+					],
+					"port": "8080",
+					"path": [
+						"slips",
+						"{{slip_ID}}"
+					]
+				},
+				"description": ""
+			},
+			"response": []
+		},
+		{
+			"name": "Get boat in slip - slip is empty",
+			"event": [
+				{
+					"listen": "test",
+					"script": {
+						"id": "f4adfd71-90ce-4c84-b730-0183eb1ed2f8",
+						"type": "text/javascript",
+						"exec": [
+							"tests[\"Slip successfully returned - slip is currently empty\"] = responseCode.code === 200;"
+						]
+					}
+				}
+			],
+			"request": {
+				"method": "GET",
+				"header": [],
+				"body": {},
+				"url": {
+					"raw": "http://localhost:8080/marina/{{slip_ID}}",
+					"protocol": "http",
+					"host": [
+						"localhost"
+					],
+					"port": "8080",
+					"path": [
+						"marina",
+						"{{slip_ID}}"
+					]
+				},
+				"description": ""
+			},
+			"response": []
+		},
+		{
+			"name": "Get boat in slip - error check bad slip id",
+			"event": [
+				{
+					"listen": "test",
+					"script": {
+						"id": "f35587f2-75d4-4512-abf2-a6d2b401f8ac",
+						"type": "text/javascript",
+						"exec": [
+							"tests[\"Error caught successfully - bad slip id in URL\"] = responseCode.code === 400;"
+						]
+					}
+				}
+			],
+			"request": {
+				"method": "GET",
+				"header": [],
+				"body": {},
+				"url": {
+					"raw": "http://localhost:8080/marina/badSlipID",
+					"protocol": "http",
+					"host": [
+						"localhost"
+					],
+					"port": "8080",
+					"path": [
+						"marina",
+						"badSlipID"
+					]
+				},
+				"description": ""
+			},
+			"response": []
+		},
+		{
+			"name": "Put boat from sea in slip",
+			"event": [
+				{
+					"listen": "test",
+					"script": {
+						"id": "a861eb73-f67e-4495-a2ce-9cbef85fe8aa",
+						"type": "text/javascript",
+						"exec": [
+							"tests[\"Boat was successfully brought in from sea and put in the slip\"] = responseCode.code === 200;"
+						]
+					}
+				}
+			],
+			"request": {
+				"method": "PUT",
+				"header": [
+					{
+						"key": "Content-Type",
+						"value": "application/json"
+					}
+				],
+				"body": {
+					"mode": "raw",
+					"raw": "{\"current_boat\":\"aghkZXZ-Tm9uZXIRCxIEQm9hdBiAgICAgIDACgw\", \"arrival_date\":\"2018-01-23\"}"
+				},
+				"url": {
+					"raw": "http://localhost:8080/marina/{{slip_ID}}",
+					"protocol": "http",
+					"host": [
+						"localhost"
+					],
+					"port": "8080",
+					"path": [
+						"marina",
+						"{{slip_ID}}"
+					]
+				},
+				"description": ""
+			},
+			"response": []
+		},
+		{
+			"name": "Get boat in slip - slip is not empty",
+			"event": [
+				{
+					"listen": "test",
+					"script": {
+						"id": "ccbd5672-de45-479d-b280-2a3495168ca6",
+						"type": "text/javascript",
+						"exec": [
+							"tests[\"Slip successfully returned with the boat inside it - slip is not empty\"] = responseCode.code === 200;"
+						]
+					}
+				}
+			],
+			"request": {
+				"method": "GET",
+				"header": [],
+				"body": {},
+				"url": {
+					"raw": "http://localhost:8080/marina/{{slip_ID}}",
+					"protocol": "http",
+					"host": [
+						"localhost"
+					],
+					"port": "8080",
+					"path": [
+						"marina",
+						"{{slip_ID}}"
+					]
+				},
+				"description": ""
+			},
+			"response": []
+		},
+		{
+			"name": "Put boat from sea in slip - error check bad body",
+			"event": [
+				{
+					"listen": "test",
+					"script": {
+						"id": "0b8086f2-bf87-4a04-9166-681d35b81de7",
+						"type": "text/javascript",
+						"exec": [
+							"tests[\"Error caught successfully - bad format in PUT body\"] = responseCode.code === 400;"
+						]
+					}
+				}
+			],
+			"request": {
+				"method": "PUT",
+				"header": [
+					{
+						"key": "Content-Type",
+						"value": "application/json"
+					}
+				],
+				"body": {
+					"mode": "raw",
+					"raw": "{\"BADcurrent_boat\":\"aghkZXZ-Tm9uZXIRCxIEQm9hdBiAgICAgIDACQw\", \"BADarrival_date\":\"2018-01-23\"}"
+				},
+				"url": {
+					"raw": "http://localhost:8080/marina/{{slip_ID}}",
+					"protocol": "http",
+					"host": [
+						"localhost"
+					],
+					"port": "8080",
+					"path": [
+						"marina",
+						"{{slip_ID}}"
+					]
+				},
+				"description": ""
+			},
+			"response": []
+		},
+		{
+			"name": "Put boat from sea in slip - error check bad slip id",
+			"event": [
+				{
+					"listen": "test",
+					"script": {
+						"id": "87e2535b-b112-46a9-abbf-e2c76761c5b1",
+						"type": "text/javascript",
+						"exec": [
+							"tests[\"Error caught successfully - bad slip ID in URL\"] = responseCode.code === 400;"
+						]
+					}
+				}
+			],
+			"request": {
+				"method": "PUT",
+				"header": [
+					{
+						"key": "Content-Type",
+						"value": "application/json"
+					}
+				],
+				"body": {
+					"mode": "raw",
+					"raw": "{\"current_boat\":\"aghkZXZ-Tm9uZXIRCxIEQm9hdBiAgICAgICACww\", \"arrival_date\":\"2018-01-23\"}"
+				},
+				"url": {
+					"raw": "http://localhost:8080/marina/badSlipID",
+					"protocol": "http",
+					"host": [
+						"localhost"
+					],
+					"port": "8080",
+					"path": [
+						"marina",
+						"badSlipID"
+					]
+				},
+				"description": ""
+			},
+			"response": []
+		},
+		{
+			"name": "Put boat from sea in slip - error check bad boat id",
+			"event": [
+				{
+					"listen": "test",
+					"script": {
+						"id": "1ebecd1c-f3f9-4ff7-a946-b35d6a08e189",
+						"type": "text/javascript",
+						"exec": [
+							"tests[\"Error caught successfully - bad bod ID in body\"] = responseCode.code === 400;"
+						]
+					}
+				}
+			],
+			"request": {
+				"method": "PUT",
+				"header": [
+					{
+						"key": "Content-Type",
+						"value": "application/json"
+					}
+				],
+				"body": {
+					"mode": "raw",
+					"raw": "{\"current_boat\":\"bad_Boat_ID\", \"arrival_date\":\"2018-01-23\"}"
+				},
+				"url": {
+					"raw": "http://localhost:8080/marina/badSlipID",
+					"protocol": "http",
+					"host": [
+						"localhost"
+					],
+					"port": "8080",
+					"path": [
+						"marina",
+						"badSlipID"
+					]
+				},
+				"description": ""
+			},
+			"response": []
+		},
+		{
+			"name": "Put boat from sea in slip - error check slip not empty",
+			"event": [
+				{
+					"listen": "test",
+					"script": {
+						"id": "e717629c-64c8-41e4-8670-5e4e5c954909",
+						"type": "text/javascript",
+						"exec": [
+							"tests[\"Error caught successfully - cannot add boat to slip, another boat is already in slip\"] = responseCode.code === 403;"
+						]
+					}
+				}
+			],
+			"request": {
+				"method": "PUT",
+				"header": [
+					{
+						"key": "Content-Type",
+						"value": "application/json"
+					}
+				],
+				"body": {
+					"mode": "raw",
+					"raw": "{\"current_boat\":\"aghkZXZ-Tm9uZXIRCxIEQm9hdBiAgICAgIDACQw\", \"arrival_date\":\"2018-01-23\"}"
+				},
+				"url": {
+					"raw": "http://localhost:8080/marina/{{slip_ID}}",
+					"protocol": "http",
+					"host": [
+						"localhost"
+					],
+					"port": "8080",
+					"path": [
+						"marina",
+						"{{slip_ID}}"
+					]
+				},
+				"description": ""
+			},
+			"response": []
+		},
+		{
+			"name": "Remove boat from slip",
+			"event": [
+				{
+					"listen": "test",
+					"script": {
+						"id": "1e6a637c-c57c-4dc6-be87-d007eeaf6955",
+						"type": "text/javascript",
+						"exec": [
+							"tests[\"Boat was successfully removed from slip and sent out to sea\"] = responseCode.code === 200;"
+						]
+					}
+				}
+			],
+			"request": {
+				"method": "DELETE",
+				"header": [],
+				"body": {},
+				"url": {
+					"raw": "http://localhost:8080/marina/{{slip_ID}}",
+					"protocol": "http",
+					"host": [
+						"localhost"
+					],
+					"port": "8080",
+					"path": [
+						"marina",
+						"{{slip_ID}}"
+					]
+				},
+				"description": ""
+			},
+			"response": []
+		},
+		{
+			"name": "Remove boat from slip - error check bad slip id",
+			"event": [
+				{
+					"listen": "test",
+					"script": {
+						"id": "2e1ed47b-f008-4ae7-8e10-a10c17d44846",
+						"type": "text/javascript",
+						"exec": [
+							"tests[\"Error caught successfully - bad slip id in URL\"] = responseCode.code === 400;"
+						]
+					}
+				}
+			],
+			"request": {
+				"method": "DELETE",
+				"header": [],
+				"body": {},
+				"url": {
+					"raw": "http://localhost:8080/marina/badSlipID",
+					"protocol": "http",
+					"host": [
+						"localhost"
+					],
+					"port": "8080",
+					"path": [
+						"marina",
+						"badSlipID"
+					]
+				},
+				"description": ""
+			},
+			"response": []
+		},
+		{
+			"name": "Remove boat from slip - error check slip already empty",
+			"event": [
+				{
+					"listen": "test",
+					"script": {
+						"id": "ecfe9198-639d-489c-bc08-8386a5a30213",
+						"type": "text/javascript",
+						"exec": [
+							"tests[\"Error caught successfully - slip is already empty\"] = responseCode.code === 403;"
+						]
+					}
+				}
+			],
+			"request": {
+				"method": "DELETE",
+				"header": [],
+				"body": {},
+				"url": {
+					"raw": "http://localhost:8080/marina/{{slip_ID}}",
+					"protocol": "http",
+					"host": [
+						"localhost"
+					],
+					"port": "8080",
+					"path": [
+						"marina",
+						"{{slip_ID}}"
+					]
+				},
+				"description": ""
+			},
+			"response": []
+		},
+		{
+			"name": "Delete boat",
+			"event": [
+				{
+					"listen": "test",
+					"script": {
+						"id": "bf8adba7-87c9-4b11-9a22-5f6bb906bd9e",
+						"type": "text/javascript",
+						"exec": [
+							"tests[\"Boat was successfully deleted\"] = responseCode.code === 200;"
+						]
+					}
+				}
+			],
+			"request": {
+				"method": "DELETE",
+				"header": [],
+				"body": {},
+				"url": {
+					"raw": "http://localhost:8080/boats/{{boat_ID}}",
+					"protocol": "http",
+					"host": [
+						"localhost"
+					],
+					"port": "8080",
+					"path": [
+						"boats",
+						"{{boat_ID}}"
+					]
+				},
+				"description": ""
+			},
+			"response": []
+		},
+		{
+			"name": "Delete boat - error check bad boat id",
+			"event": [
+				{
+					"listen": "test",
+					"script": {
+						"id": "6d2ab1b7-e91a-4ab1-9750-799e4ba6a095",
+						"type": "text/javascript",
+						"exec": [
+							"tests[\"Error caught successfully - bad boat id in URL\"] = responseCode.code === 400;"
+						]
+					}
+				}
+			],
+			"request": {
+				"method": "DELETE",
+				"header": [],
+				"body": {},
+				"url": {
+					"raw": "http://localhost:8080/boats/badBoatID",
+					"protocol": "http",
+					"host": [
+						"localhost"
+					],
+					"port": "8080",
+					"path": [
+						"boats",
+						"badBoatID"
+					]
+				},
+				"description": ""
+			},
+			"response": []
+		},
+		{
+			"name": "Confirm boat was deleted - list of boats decreased",
+			"event": [
+				{
+					"listen": "test",
+					"script": {
+						"id": "0749b1fd-b3cf-4a75-a560-4ed77548f51d",
+						"type": "text/javascript",
+						"exec": [
+							"var data = JSON.parse(responseBody);",
+							"var new_number_of_boats = Object.keys(data).length;",
+							"var old_number_of_boats = postman.getEnvironmentVariable(\"total_boats\");",
+							"",
+							"tests[\"List of boats has decreased by 1\"] = new_number_of_boats < old_number_of_boats;",
+							"",
+							"postman.setEnvironmentVariable(\"total_boats\",new_number_of_boats);"
+						]
+					}
+				}
+			],
+			"request": {
+				"method": "GET",
+				"header": [],
+				"body": {},
+				"url": {
+					"raw": "http://localhost:8080/boats",
+					"protocol": "http",
+					"host": [
+						"localhost"
+					],
+					"port": "8080",
+					"path": [
+						"boats"
+					]
+				},
+				"description": ""
+			},
+			"response": []
+		},
+		{
+			"name": "Delete slip",
+			"event": [
+				{
+					"listen": "test",
+					"script": {
+						"id": "d99ccf71-5679-4dbf-a3dc-c016bd2ef666",
+						"type": "text/javascript",
+						"exec": [
+							"tests[\"Slip was successfully deleted\"] = responseCode.code === 200;"
+						]
+					}
+				}
+			],
+			"request": {
+				"method": "DELETE",
+				"header": [],
+				"body": {},
+				"url": {
+					"raw": "http://localhost:8080/slips/{{slip_ID}}",
+					"protocol": "http",
+					"host": [
+						"localhost"
+					],
+					"port": "8080",
+					"path": [
+						"slips",
+						"{{slip_ID}}"
+					]
+				},
+				"description": ""
+			},
+			"response": []
+		},
+		{
+			"name": "Delete slip - error check bad slip id",
+			"event": [
+				{
+					"listen": "test",
+					"script": {
+						"id": "7e89fad9-2a6c-4d88-9f4e-8adbe3eb7e44",
+						"type": "text/javascript",
+						"exec": [
+							"tests[\"Error caught successfully - bad slip id in URL\"] = responseCode.code === 400;"
+						]
+					}
+				}
+			],
+			"request": {
+				"method": "DELETE",
+				"header": [],
+				"body": {},
+				"url": {
+					"raw": "http://localhost:8080/slips/badSlipID",
+					"protocol": "http",
+					"host": [
+						"localhost"
+					],
+					"port": "8080",
+					"path": [
+						"slips",
+						"badSlipID"
+					]
+				},
+				"description": ""
+			},
+			"response": []
+		},
+		{
+			"name": "Confirm slip was deleted - number of slips in list decreased",
+			"event": [
+				{
+					"listen": "test",
+					"script": {
+						"id": "b4ae3639-5715-48cb-8bee-8f42392672f8",
+						"type": "text/javascript",
+						"exec": [
+							"var data = JSON.parse(responseBody);",
+							"var new_number_of_slips = Object.keys(data).length;",
+							"var old_number_of_slips = postman.getEnvironmentVariable(\"total_slips\");",
+							"",
+							"tests[\"List of slips has decreased by 1\"] = new_number_of_slips < old_number_of_slips;",
+							"",
+							"postman.setEnvironmentVariable(\"total_slips\",new_number_of_slips);",
+							"postman.clearEnvironmentVariable(\"total_slips\");",
+							"postman.clearEnvironmentVariable(\"total_boats\");",
+							"postman.clearEnvironmentVariable(\"boat_ID\");",
+							"postman.clearEnvironmentVariable(\"slip_ID\");"
+						]
+					}
+				}
+			],
+			"request": {
+				"method": "GET",
+				"header": [],
+				"body": {},
+				"url": {
+					"raw": "http://localhost:8080/slips",
+					"protocol": "http",
+					"host": [
+						"localhost"
+					],
+					"port": "8080",
+					"path": [
+						"slips"
+					]
+				},
+				"description": ""
+			},
+			"response": []
+		}
+	]
+}
