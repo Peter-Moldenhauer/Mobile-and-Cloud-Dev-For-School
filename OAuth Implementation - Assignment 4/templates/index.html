@@ -1,0 +1,58 @@
+<html lang="en">
+    <head>
+        <title>OAuth 2.0 Implementation</title>
+        <meta charset="UTF-8">
+        <meta name="viewport" content="width=device-width, initial-scale=1">
+        <link href="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.7/css/bootstrap.min.css" rel="stylesheet" integrity="sha384-BVYiiSIFeK1dGmJRAkycuHAHRg32OmUcww7on3RYdg4Va+PmSTsz/K68vbdEjh4u" crossorigin="anonymous">
+		<link rel="stylesheet" type="text/css" href="/static/main.css">
+    </head>
+    <body>
+
+        <div class="container">
+            <div class="jumbotron">
+                <center><h1 class="centered-text display-3">OAuth 2.0 Implementation</h1></center>
+                <br>
+				<p class="lead centered-text">
+                    This application demonstrates OAuth 2.0 Server Side flow.
+					The following pieces of functionality are implemented in 
+					this application:
+					<ul class="lead centered-text">
+						<li>A page that has a link a user clicks on to visit the 
+						Google OAuth 2.0 endpoint
+						</li>
+						<li>A page that handles the user getting redirected back 
+						to the website from Google's endpoint and handles the 
+						exchange of the access code for a token
+						</li>
+						<li>A page (which can use the same handler as the page the 
+						user was redirected to) which uses that token to access and 
+						display the users first and last name and the URL to access 
+						the users Google+ account. It will also display the value 
+						of the state variable that was used to secure the original 
+						redirect. 
+						</li>
+					</ul>
+				</p>
+				<p  class="lead centered-text">
+					To get started, click on the button below. Once the button 
+					is clicked on, this app will request access to protected 
+					resources (email) on your Google+ account. As noted above, 
+					once access to the protected
+                    resource has been gained, the following information will be
+                    displayed: first and last name, URL to access your Google+
+                    account, and the value of the state variable that was used
+                    to secure the original redirect.
+                </p>
+                <br>
+                <div class="text-center">
+                    <div class="btn-group">
+                        <a href="{{ url }}" class="btn btn-primary" style="background-color: #2196f3">Click Here</a>
+                    </div>
+                </div>
+            </div>
+			<div class="well">
+				<center>&copy Peter Moldenhauer Feb. 3rd 2018 ~ moldenhp@oregonstate.edu</center>
+			</div>
+        </div>
+    </body>
+</html>
