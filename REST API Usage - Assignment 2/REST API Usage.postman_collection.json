@@ -1,0 +1,817 @@
+{
+	"info": {
+		"name": "REST API Usage",
+		"_postman_id": "e2d5f031-46c7-85d4-8f28-8f5c0aa8ad42",
+		"description": "",
+		"schema": "https://schema.getpostman.com/json/collection/v2.1.0/collection.json"
+	},
+	"item": [
+		{
+			"name": "Get public Gists",
+			"event": [
+				{
+					"listen": "test",
+					"script": {
+						"id": "c7e7332f-4149-479e-923d-d1f0e41ab3bc",
+						"type": "text/javascript",
+						"exec": [
+							"var object = JSON.parse(responseBody);",
+							"",
+							"tests[\"Getting public Gists returns 30 Gists\"] = object.length === 30;"
+						]
+					}
+				}
+			],
+			"request": {
+				"auth": {
+					"type": "oauth1",
+					"oauth1": [
+						{
+							"key": "signatureMethod",
+							"value": "HMAC-SHA1",
+							"type": "string"
+						},
+						{
+							"key": "version",
+							"value": "1.0",
+							"type": "string"
+						},
+						{
+							"key": "addParamsToHeader",
+							"value": false,
+							"type": "boolean"
+						},
+						{
+							"key": "addEmptyParamsToSign",
+							"value": false,
+							"type": "boolean"
+						}
+					]
+				},
+				"method": "GET",
+				"header": [
+					{
+						"key": "Authorization",
+						"value": "{{OAuthToken}}"
+					}
+				],
+				"body": {},
+				"url": {
+					"raw": "https://api.github.com/gists/public",
+					"protocol": "https",
+					"host": [
+						"api",
+						"github",
+						"com"
+					],
+					"path": [
+						"gists",
+						"public"
+					]
+				},
+				"description": "Getting public Gists returns 30 Gists."
+			},
+			"response": []
+		},
+		{
+			"name": "Confirm wolfordj Gist",
+			"event": [
+				{
+					"listen": "test",
+					"script": {
+						"id": "a9bdffb0-6bda-48fe-9651-45e7b39e7954",
+						"type": "text/javascript",
+						"exec": [
+							"var object = JSON.parse(responseBody);",
+							"",
+							"tests[\"The user 'wolfordj' has at least one public Gist\"] = object.length >= 1;"
+						]
+					}
+				}
+			],
+			"request": {
+				"method": "GET",
+				"header": [
+					{
+						"key": "Authorization",
+						"value": "{{OAuthToken}}"
+					}
+				],
+				"body": {},
+				"url": {
+					"raw": "https://api.github.com/users/wolfordj/gists",
+					"protocol": "https",
+					"host": [
+						"api",
+						"github",
+						"com"
+					],
+					"path": [
+						"users",
+						"wolfordj",
+						"gists"
+					]
+				},
+				"description": "Confirm that the user 'wolfordj' has at least one public Gist"
+			},
+			"response": []
+		},
+		{
+			"name": "Get MY Gists",
+			"event": [
+				{
+					"listen": "test",
+					"script": {
+						"id": "81ffd4f9-102a-491d-b2f9-0e8ca774695e",
+						"type": "text/javascript",
+						"exec": [
+							"var gistsObject = JSON.parse(responseBody);",
+							"",
+							"postman.setEnvironmentVariable(\"total_Gists\",responseBody);"
+						]
+					}
+				}
+			],
+			"request": {
+				"method": "GET",
+				"header": [
+					{
+						"key": "Authorization",
+						"value": "{{OAuthToken}}"
+					}
+				],
+				"body": {},
+				"url": {
+					"raw": "https://api.github.com/users/moldenhp/gists",
+					"protocol": "https",
+					"host": [
+						"api",
+						"github",
+						"com"
+					],
+					"path": [
+						"users",
+						"moldenhp",
+						"gists"
+					]
+				},
+				"description": "Gets my (moldenhp) Gists and creates an environment variable for it"
+			},
+			"response": []
+		},
+		{
+			"name": "Add Gist to moldenhp",
+			"event": [
+				{
+					"listen": "test",
+					"script": {
+						"id": "2c7e572c-6e59-46c8-bffb-df675ded56ce",
+						"type": "text/javascript",
+						"exec": [
+							"postman.setEnvironmentVariable(\"contents_Sent\", \"My first Gist!\");",
+							"",
+							"tests[\"A Gist was created for moldenhp\"] = responseCode.code === 201;"
+						]
+					}
+				}
+			],
+			"request": {
+				"method": "POST",
+				"header": [
+					{
+						"key": "Authorization",
+						"value": "{{OAuthToken}}"
+					}
+				],
+				"body": {
+					"mode": "raw",
+					"raw": "{\n\t\"description\": \"My first Gist!\",\n\t\"public\": true,\n\t\"files\": {\n\t\t\"file1.txt\": {\n\t\t\t\"content\": \"String file contents\"\n\t\t}\n\t}\n}"
+				},
+				"url": {
+					"raw": "https://api.github.com/gists",
+					"protocol": "https",
+					"host": [
+						"api",
+						"github",
+						"com"
+					],
+					"path": [
+						"gists"
+					]
+				},
+				"description": "Creates a Gist for the user \"moldenhp\""
+			},
+			"response": []
+		},
+		{
+			"name": "Confirm Gist increase",
+			"event": [
+				{
+					"listen": "test",
+					"script": {
+						"id": "764dde13-c562-4074-ad46-1771f48d30af",
+						"type": "text/javascript",
+						"exec": [
+							"var object = JSON.parse(responseBody);",
+							"",
+							"var new_Total_Gists = JSON.parse(postman.getEnvironmentVariable(\"total_Gists\"));",
+							"",
+							"tests[\"The Gist count for user 'moldenhp' has increased by 1\"] = object.length === new_Total_Gists.length + 1;"
+						]
+					}
+				}
+			],
+			"request": {
+				"method": "GET",
+				"header": [
+					{
+						"key": "Authorization",
+						"value": "{{OAuthToken}}"
+					}
+				],
+				"body": {},
+				"url": {
+					"raw": "https://api.github.com/users/moldenhp/gists",
+					"protocol": "https",
+					"host": [
+						"api",
+						"github",
+						"com"
+					],
+					"path": [
+						"users",
+						"moldenhp",
+						"gists"
+					]
+				},
+				"description": "Confirm that when Gist was created, the number of Gists of my account increases by 1"
+			},
+			"response": []
+		},
+		{
+			"name": "Confirm Gist contents",
+			"event": [
+				{
+					"listen": "test",
+					"script": {
+						"id": "dac4ee9c-da4b-4147-a879-741e7b68fb7d",
+						"type": "text/javascript",
+						"exec": [
+							"var object = JSON.parse(responseBody);",
+							"",
+							"var contents = postman.getEnvironmentVariable(\"contents_Sent\");",
+							"postman.setEnvironmentVariable(\"my_Gist_ID\", object[object.length - 1].id);",
+							"",
+							"tests[\"The contents of the created Gist matches the contents sent\"] = object[object.length - 1].description === contents;"
+						]
+					}
+				}
+			],
+			"request": {
+				"method": "GET",
+				"header": [
+					{
+						"key": "Authorization",
+						"value": "{{OAuthToken}}"
+					}
+				],
+				"body": {},
+				"url": {
+					"raw": "https://api.github.com/users/moldenhp/gists",
+					"protocol": "https",
+					"host": [
+						"api",
+						"github",
+						"com"
+					],
+					"path": [
+						"users",
+						"moldenhp",
+						"gists"
+					]
+				},
+				"description": "Confirm the contents of the created Gist matches the contents that was sent"
+			},
+			"response": []
+		},
+		{
+			"name": "Get Gist contents before edit",
+			"event": [
+				{
+					"listen": "test",
+					"script": {
+						"id": "5b64d44c-84e9-4c20-9ccc-b01e7c230912",
+						"type": "text/javascript",
+						"exec": [
+							"var object = JSON.parse(responseBody);",
+							"",
+							"var contents = postman.getEnvironmentVariable(\"contents_Sent\");",
+							"",
+							"tests[\"Gist contents before edit is: 'My first Gist!'\"] = object.description === contents;"
+						]
+					}
+				}
+			],
+			"request": {
+				"method": "GET",
+				"header": [
+					{
+						"key": "Authorization",
+						"value": "{{OAuthToken}}"
+					}
+				],
+				"body": {},
+				"url": {
+					"raw": "https://api.github.com/gists/{{my_Gist_ID}}",
+					"protocol": "https",
+					"host": [
+						"api",
+						"github",
+						"com"
+					],
+					"path": [
+						"gists",
+						"{{my_Gist_ID}}"
+					]
+				},
+				"description": "Gets the contents of a Gist before it is edited"
+			},
+			"response": []
+		},
+		{
+			"name": "Edit Gist contents",
+			"event": [
+				{
+					"listen": "test",
+					"script": {
+						"id": "67dc48a9-d185-4452-9643-4446eb4fcafc",
+						"type": "text/javascript",
+						"exec": [
+							"tests[\"Gist edit was successful\"] = responseCode.code === 200;"
+						]
+					}
+				}
+			],
+			"request": {
+				"method": "PATCH",
+				"header": [
+					{
+						"key": "Authorization",
+						"value": "{{OAuthToken}}"
+					}
+				],
+				"body": {
+					"mode": "raw",
+					"raw": "{\n\t\"description\": \"New contents of Gist!\"\n}"
+				},
+				"url": {
+					"raw": "https://api.github.com/gists/{{my_Gist_ID}}",
+					"protocol": "https",
+					"host": [
+						"api",
+						"github",
+						"com"
+					],
+					"path": [
+						"gists",
+						"{{my_Gist_ID}}"
+					]
+				},
+				"description": "Edit the contents of a Gist"
+			},
+			"response": []
+		},
+		{
+			"name": "Get Gist contents after edit",
+			"event": [
+				{
+					"listen": "test",
+					"script": {
+						"id": "3a4e0197-b1e2-4872-bd4a-5008ed847834",
+						"type": "text/javascript",
+						"exec": [
+							"var object = JSON.parse(responseBody);",
+							"",
+							"tests[\"Gist contents before edit is: 'New contents of Gist!'\"] = object.description === \"New contents of Gist!\";"
+						]
+					}
+				}
+			],
+			"request": {
+				"method": "GET",
+				"header": [
+					{
+						"key": "Authorization",
+						"value": "{{OAuthToken}}"
+					}
+				],
+				"body": {},
+				"url": {
+					"raw": "https://api.github.com/gists/{{my_Gist_ID}}",
+					"protocol": "https",
+					"host": [
+						"api",
+						"github",
+						"com"
+					],
+					"path": [
+						"gists",
+						"{{my_Gist_ID}}"
+					]
+				},
+				"description": "Confirm the contents of edited Gist did indeed change"
+			},
+			"response": []
+		},
+		{
+			"name": "Get list of all starred Gists",
+			"event": [
+				{
+					"listen": "test",
+					"script": {
+						"id": "1fefadc1-0a5f-4d72-9b12-c9d79c0b66f1",
+						"type": "text/javascript",
+						"exec": [
+							"var gistsObject = JSON.parse(responseBody);",
+							"",
+							"postman.setEnvironmentVariable(\"total_Starred_Gists_List\",responseBody);"
+						]
+					}
+				}
+			],
+			"request": {
+				"method": "GET",
+				"header": [
+					{
+						"key": "Authorization",
+						"value": "{{OAuthToken}}"
+					}
+				],
+				"body": {},
+				"url": {
+					"raw": "https://api.github.com/gists/starred",
+					"protocol": "https",
+					"host": [
+						"api",
+						"github",
+						"com"
+					],
+					"path": [
+						"gists",
+						"starred"
+					]
+				},
+				"description": "Get a list of all starred Gists to compare to later"
+			},
+			"response": []
+		},
+		{
+			"name": "Confirm Gist is NOT starred",
+			"event": [
+				{
+					"listen": "test",
+					"script": {
+						"id": "78dbe1f2-ecfa-4423-8d3f-e78cb522803e",
+						"type": "text/javascript",
+						"exec": [
+							"tests[\"This Gist is not starred\"] = responseCode.code === 404;",
+							"",
+							"var starred_Gists = postman.getEnvironmentVariable(\"total_Starred_Gists_List\")",
+							"",
+							"tests[\"This Gist is not in the starred Gist List\"] = !(starred_Gists.has(postman.getEnvironmentVariable(\"my_Gist_ID\"))); "
+						]
+					}
+				}
+			],
+			"request": {
+				"method": "GET",
+				"header": [
+					{
+						"key": "Authorization",
+						"value": "{{OAuthToken}}"
+					}
+				],
+				"body": {},
+				"url": {
+					"raw": "https://api.github.com/gists/{{my_Gist_ID}}/star",
+					"protocol": "https",
+					"host": [
+						"api",
+						"github",
+						"com"
+					],
+					"path": [
+						"gists",
+						"{{my_Gist_ID}}",
+						"star"
+					]
+				},
+				"description": "Confirm that Gist is not starred"
+			},
+			"response": []
+		},
+		{
+			"name": "Star the Gist",
+			"event": [
+				{
+					"listen": "test",
+					"script": {
+						"id": "01272867-9892-446e-be14-a2d341a30329",
+						"type": "text/javascript",
+						"exec": [
+							"tests[\"Added a star to the Gist\"] = responseCode.code === 204;"
+						]
+					}
+				}
+			],
+			"request": {
+				"method": "PUT",
+				"header": [
+					{
+						"key": "Authorization",
+						"value": "{{OAuthToken}}"
+					}
+				],
+				"body": {
+					"mode": "raw",
+					"raw": ""
+				},
+				"url": {
+					"raw": "https://api.github.com/gists/{{my_Gist_ID}}/star",
+					"protocol": "https",
+					"host": [
+						"api",
+						"github",
+						"com"
+					],
+					"path": [
+						"gists",
+						"{{my_Gist_ID}}",
+						"star"
+					]
+				},
+				"description": "Add a star to the Gist"
+			},
+			"response": []
+		},
+		{
+			"name": "Confirm Gist IS starred",
+			"event": [
+				{
+					"listen": "test",
+					"script": {
+						"id": "c954292d-24c8-4da5-b533-905b5dc545d2",
+						"type": "text/javascript",
+						"exec": [
+							"tests[\"This Gist is starred\"] = responseCode.code === 204;"
+						]
+					}
+				}
+			],
+			"request": {
+				"method": "GET",
+				"header": [
+					{
+						"key": "Authorization",
+						"value": "{{OAuthToken}}"
+					}
+				],
+				"body": {},
+				"url": {
+					"raw": "https://api.github.com/gists/{{my_Gist_ID}}/star",
+					"protocol": "https",
+					"host": [
+						"api",
+						"github",
+						"com"
+					],
+					"path": [
+						"gists",
+						"{{my_Gist_ID}}",
+						"star"
+					]
+				},
+				"description": "Confirm that Gist is now starred"
+			},
+			"response": []
+		},
+		{
+			"name": "Confirm list of starred Gists",
+			"event": [
+				{
+					"listen": "test",
+					"script": {
+						"id": "c80278a7-7d68-4799-9042-b92a9950634e",
+						"type": "text/javascript",
+						"exec": [
+							"var recently_Added_Starred_Gist = postman.getEnvironmentVariable(\"my_Gist_ID\");",
+							"var object = JSON.parse(responseBody);",
+							"var starredList = JSON.parse(postman.getEnvironmentVariable(\"total_Starred_Gists_List\"));",
+							"",
+							"tests[\"Starred Gist list increased by 1 after Gist was just starred\"] = object.length === starredList.length + 1;",
+							"",
+							"tests[\"Recently starred Gist is in the list of starred Gists\"] = responseBody.has(recently_Added_Starred_Gist);"
+						]
+					}
+				}
+			],
+			"request": {
+				"method": "GET",
+				"header": [
+					{
+						"key": "Authorization",
+						"value": "{{OAuthToken}}"
+					}
+				],
+				"body": {},
+				"url": {
+					"raw": "https://api.github.com/gists/starred",
+					"protocol": "https",
+					"host": [
+						"api",
+						"github",
+						"com"
+					],
+					"path": [
+						"gists",
+						"starred"
+					]
+				},
+				"description": "Confirm that the list of starred gists is correct"
+			},
+			"response": []
+		},
+		{
+			"name": "Remove star from Gist",
+			"event": [
+				{
+					"listen": "test",
+					"script": {
+						"id": "49e129d4-ff18-4ccb-a5ff-e0e9cc70959f",
+						"type": "text/javascript",
+						"exec": [
+							"tests[\"Removed star from a Gist\"] = responseCode.code === 204;"
+						]
+					}
+				}
+			],
+			"request": {
+				"method": "DELETE",
+				"header": [
+					{
+						"key": "Authorization",
+						"value": "{{OAuthToken}}"
+					}
+				],
+				"body": {
+					"mode": "raw",
+					"raw": ""
+				},
+				"url": {
+					"raw": "https://api.github.com/gists/{{my_Gist_ID}}/star",
+					"protocol": "https",
+					"host": [
+						"api",
+						"github",
+						"com"
+					],
+					"path": [
+						"gists",
+						"{{my_Gist_ID}}",
+						"star"
+					]
+				},
+				"description": "Removes a star from the Gist"
+			},
+			"response": []
+		},
+		{
+			"name": "Confirm Gist is not in starred Gist list",
+			"event": [
+				{
+					"listen": "test",
+					"script": {
+						"id": "a4c585f9-a29f-4b29-8c87-26d0aa0103c9",
+						"type": "text/javascript",
+						"exec": [
+							"var gist_Not_Starred = postman.getEnvironmentVariable(\"my_Gist_ID\");",
+							"",
+							"tests[\"Gist with removed star is no longer in starred Gist list\"] = !(responseBody.has(gist_Not_Starred));"
+						]
+					}
+				}
+			],
+			"request": {
+				"method": "GET",
+				"header": [
+					{
+						"key": "Authorization",
+						"value": "{{OAuthToken}}"
+					}
+				],
+				"body": {},
+				"url": {
+					"raw": "https://api.github.com/gists/starred",
+					"protocol": "https",
+					"host": [
+						"api",
+						"github",
+						"com"
+					],
+					"path": [
+						"gists",
+						"starred"
+					]
+				},
+				"description": "Confirm that a star was indeed removed from a Gist. It will no longer be in the starred Gists list."
+			},
+			"response": []
+		},
+		{
+			"name": "Delete a Gist",
+			"event": [
+				{
+					"listen": "test",
+					"script": {
+						"id": "ad0bace6-5f89-4140-a952-5da80041be19",
+						"type": "text/javascript",
+						"exec": [
+							"tests[\"A Gist was successfully deleted\"] = responseCode.code === 204;"
+						]
+					}
+				}
+			],
+			"request": {
+				"method": "DELETE",
+				"header": [
+					{
+						"key": "Authorization",
+						"value": "{{OAuthToken}}"
+					}
+				],
+				"body": {},
+				"url": {
+					"raw": "https://api.github.com/gists/{{my_Gist_ID}}",
+					"protocol": "https",
+					"host": [
+						"api",
+						"github",
+						"com"
+					],
+					"path": [
+						"gists",
+						"{{my_Gist_ID}}"
+					]
+				},
+				"description": "Delete a Gist"
+			},
+			"response": []
+		},
+		{
+			"name": "Confirm delete and clean up variables",
+			"event": [
+				{
+					"listen": "test",
+					"script": {
+						"id": "2e18586b-3ada-4c0f-9421-3b77278ef239",
+						"type": "text/javascript",
+						"exec": [
+							"var deleted_Gist = postman.getEnvironmentVariable(\"my_Gist_ID\");",
+							"",
+							"tests[\"Confirmed that Gist was indeed deleted\"] = !(responseBody.has(deleted_Gist));",
+							"",
+							"postman.clearEnvironmentVariable(\"contents_Sent\");",
+							"postman.clearEnvironmentVariable(\"total_Gists\");",
+							"postman.clearEnvironmentVariable(\"my_Gist_ID\");",
+							"postman.clearEnvironmentVariable(\"total_Starred_Gists_List\");"
+						]
+					}
+				}
+			],
+			"request": {
+				"method": "GET",
+				"header": [
+					{
+						"key": "Authorization",
+						"value": "{{OAuthToken}}"
+					}
+				],
+				"body": {},
+				"url": {
+					"raw": "https://api.github.com/gists",
+					"protocol": "https",
+					"host": [
+						"api",
+						"github",
+						"com"
+					],
+					"path": [
+						"gists"
+					]
+				},
+				"description": "Confirm that a Gist was indeed deleted"
+			},
+			"response": []
+		}
+	]
+}
