@@ -1,0 +1,55 @@
+<?xml version="1.0" encoding="utf-8"?>
+<android.support.constraint.ConstraintLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    tools:context="com.example.admin.myfirstapplication.relative_activity">
+
+    <RelativeLayout
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"
+        android:paddingRight="16dp"
+        android:paddingLeft="16dp">
+
+        <EditText
+            android:id="@+id/first_name"
+            android:layout_width="0dp"
+            android:layout_height="wrap_content"
+            android:hint="@string/first_name"
+            android:layout_alignParentLeft="true"
+            android:layout_toLeftOf="@id/last_name"/>
+        <EditText
+            android:id="@+id/last_name"
+            android:layout_width="100dp"
+            android:layout_height="wrap_content"
+            android:hint="@string/last_name"
+            android:layout_alignParentRight="true"/>
+        <Button
+            android:layout_width="100dp"
+            android:layout_height="wrap_content"
+            android:text="@string/submit"
+            android:layout_below="@id/last_name"
+            android:layout_alignParentRight="true"/>
+        <Button
+            android:id="@+id/button_1"
+            android:layout_width="100dp"
+            android:layout_height="wrap_content"
+            android:text="Button 1"
+            android:layout_below="@id/first_name"
+            android:layout_alignParentLeft="true"/>
+        <Button
+            android:id="@+id/button_2"
+            android:layout_width="100dp"
+            android:layout_height="wrap_content"
+            android:text="Button 2"
+            android:layout_below="@id/button_1"
+            android:layout_alignParentLeft="true"/>
+        <TextView
+            android:layout_width="100dp"
+            android:layout_height="wrap_content"
+            android:text="Some Text here"
+            android:layout_below="@id/button_2"
+            android:layout_toLeftOf="@id/last_name"/>
+    </RelativeLayout>
+</android.support.constraint.ConstraintLayout>

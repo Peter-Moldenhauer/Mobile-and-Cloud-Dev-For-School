@@ -1,0 +1,11 @@
+<resources>
+    <string name="app_name">MyFirstApplication</string>
+    <string name="hello_world">Hello World!!!</string>
+    <string name="linear_horizontal_button">Linear Layout - Horizontal</string>
+    <string name="linear_vertical_button">Linear Layout - Vertical</string>
+    <string name="grid_button">Grid Layout</string>
+    <string name="relative_button">Relative Layout</string>
+    <string name="first_name">First Name</string>
+    <string name="last_name">Last Name</string>
+    <string name="submit">Submit</string>
+</resources>
