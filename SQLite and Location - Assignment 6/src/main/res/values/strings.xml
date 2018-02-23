@@ -1,0 +1,6 @@
+<resources>
+    <string name="app_name">Android SQLite and Location</string>
+    <string name="title">Android SQLite and Location Assignment</string>
+    <string name="button">Click Here!</string>
+    <string name="button2">Submit to Database!</string>
+</resources>
